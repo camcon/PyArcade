@@ -41,14 +41,19 @@ def getKey(direction):
     return direction
 
 def bGuyMoveDown(bGuyX,bGuyY, pixMove):
-    pixMove = 5
+    #pixMove = 5
     if bGuyY > height+32: #Added to loop BadGuy back to the top of the screen
         bGuyY = 0
-        bGuyX = random.randrange(0, width)
+        #bGuyX = random.randrange(0, width)
         print bGuyX
         bGuyDraw(bguy, bGuyX, bGuyY)
         
-    return bGuyY + pixMove    
+    return bGuyY + pixMove
+
+def hitTest(): #not completed obviously
+    return null
+    #use this to test for collisions between two objects.. In the future
+
 def bGuyDraw(bguy, bGuyX, bGuyY):
     if bGuyY < height:
         setDisplay.blit(bguy, (bGuyX, bGuyY))
@@ -67,13 +72,26 @@ while True:
         imgx -= pixMove
         
     playerDraw(img, imgx,imgy)
+    if(bGuyY > height + 32):
+       bGuyX = random.randrange(0, width)
     bGuyDraw(bguy, bGuyX, bGuyY) #Need to Allow random x positions
+
     bGuyY = bGuyMoveDown(bGuyX,bGuyY, pixMove)
     
     for event in pygame.event.get():
+                
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
 
+        elif event.type == KEYDOWN: #In theory this should be speeding up the bad guy when the down arrow is held. Doesn't work
+            if event.key == K_DOWN:
+                pixMove = 7
+                print "Test"
+        elif event.type == KEYUP:
+            if event.key == K_DOWN:
+                pixMove = 4
+
+        
     pygame.display.update()
     fpsTime.tick(fps)
