@@ -40,12 +40,20 @@ def getKey(direction):
             direction = 'null'
     return direction
 
-def bGuyMoveDown(bGuyY, pixMove):
-    pixMove = 2
+def bGuyMoveDown(bGuyX,bGuyY, pixMove):
+    pixMove = 5
+    if bGuyY > height+32: #Added to loop BadGuy back to the top of the screen
+        bGuyY = 0
+        bGuyX = random.randrange(0, width)
+        print bGuyX
+        bGuyDraw(bguy, bGuyX, bGuyY)
+        
     return bGuyY + pixMove    
 def bGuyDraw(bguy, bGuyX, bGuyY):
-    if bGuyY < height-32:
+    if bGuyY < height:
         setDisplay.blit(bguy, (bGuyX, bGuyY))
+
+        
 while True:
     setDisplay.fill(black)
     
@@ -59,8 +67,8 @@ while True:
         imgx -= pixMove
         
     playerDraw(img, imgx,imgy)
-    bGuyDraw(bguy, bGuyX, bGuyY)
-    bGuyY = bGuyMoveDown(bGuyY, pixMove)
+    bGuyDraw(bguy, bGuyX, bGuyY) #Need to Allow random x positions
+    bGuyY = bGuyMoveDown(bGuyX,bGuyY, pixMove)
     
     for event in pygame.event.get():
         if event.type == QUIT:
