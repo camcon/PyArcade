@@ -26,7 +26,7 @@ fpsTime = pygame.time.Clock()
 black = (0,0,0)
 def playerDraw(img, imgx, imgy):
     setDisplay.blit(img, (imgx,imgy))
-def getKey(direction):# gets the key and returns a direction to be processed in main function
+def getKey(direction):
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
@@ -40,27 +40,17 @@ def getKey(direction):# gets the key and returns a direction to be processed in 
             direction = 'null'
     return direction
 
-def bGuyMoveDown(bGuyX,bGuyY, pixMove):
-    pixMove = 5
-    if bGuyY > height+32: #Added to loop BadGuy back to the top of the screen
-        bGuyY = -32 #appears off the screen
-        bGuyDraw(bguy, bGuyX, bGuyY)
-        
-    return bGuyY + pixMove
-
-def hitTest(bGuyX, bGuyY, imgx, imgy): #not completed obviously
-    return null
-    #use this to test for collisions between two objects.. In the future
-
+def bGuyMoveDown(bGuyY, pixMove):
+    pixMove = 2
+    return bGuyY + pixMove    
 def bGuyDraw(bguy, bGuyX, bGuyY):
-    if bGuyY < height:
+    if bGuyY < height-32:
         setDisplay.blit(bguy, (bGuyX, bGuyY))
-
-        
 while True:
     setDisplay.fill(black)
     
-    movement = getKey(movement)    
+    movement = getKey(movement)
+    
     
     if movement == 'right' and imgx < width-36:
         imgx += pixMove      
@@ -69,28 +59,13 @@ while True:
         imgx -= pixMove
         
     playerDraw(img, imgx,imgy)
-    
-    if(bGuyY > height + 32):
-       bGuyX = random.randrange(0, width)
-       
-    bGuyDraw(bguy, bGuyX, bGuyY) #Need to Allow random x positions
-
-    bGuyY = bGuyMoveDown(bGuyX,bGuyY, pixMove)
+    bGuyDraw(bguy, bGuyX, bGuyY)
+    bGuyY = bGuyMoveDown(bGuyY, pixMove)
     
     for event in pygame.event.get():
-                
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
 
-        elif event.type == KEYDOWN: #In theory this should be speeding up the bad guy when the down arrow is held. Doesn't work
-            if event.key == K_DOWN:
-                pixMove = 7
-                print "Test"
-        elif event.type == KEYUP:
-            if event.key == K_DOWN:
-                pixMove = 4
-
-        
     pygame.display.update()
     fpsTime.tick(fps)
