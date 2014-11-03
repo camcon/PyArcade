@@ -20,13 +20,11 @@ imgy = height - 40
 bGuyY = 0
 bGuyX = (width/2) - 16
 
-gShotX = imgx
-gShotY = imgy
-
 key = 'null'
 pixMove = 5
 fps = 30
-gGuyShoot = False
+gShotVisible = False
+checkShot = False
 
 fpsTime = pygame.time.Clock()
 
@@ -46,13 +44,7 @@ def getKey(direction):# gets the key and returns a direction to be processed in 
             elif event.key == K_SPACE:
                 direction = 'shot'
         elif event.type == KEYUP:
-            if event.key == K_LEFT:
-                direction = 'null'
-            elif event.key == K_RIGHT:
-                direction = 'null'
-            elif event.key == K_SPACE:
-                direction = direction
-                gGuyShoot = False
+            direction = 'null'
     return direction
 
 def bGuyMoveDown(bGuyX,bGuyY, pixMove):
@@ -70,12 +62,15 @@ def hitTest(bGuyX, bGuyY, imgx, imgy): #not completed obviously
 def bGuyDraw(bguy, bGuyX, bGuyY):
     if bGuyY < height:
         setDisplay.blit(bguy, (bGuyX, bGuyY))
-def gShotDrawAndMove(gShot, x, y):
-    if y > 0:
-        setDisplay.blit(gShot, (x,y))
-        
-    return y - 1
-
+def drawGShot(imgx, imgy):
+    gShotX = imgx - 16
+    gShotY = imgy + 16
+    gShotVisible = True
+    setDisplay.blit(gShot, (gShotX, gShotY))#the +/- centers the start position
+    return gShotVisible #returns boolean to check and see if the shot is drawn for the main function to see
+def gShotMoveUp(gShotY,pixMove):
+    pixMove = 5        
+    return gShotY - pixMove
 
         
 while True:
@@ -89,17 +84,17 @@ while True:
     elif key == 'left' and imgx > 0:
         imgx -= pixMove
     elif key == 'shot':
-       gGuyShoot = True
+        checkShot = True #need to set this to false after 'space' is let go
         
-      
+    drawGShot(imgx, imgy) #checks to see if the shot is drawn    
     playerDraw(img, imgx,imgy)
-    
+    gShotMoveUp(imgy, pixMove)#Doesn't actually move up yet
     
     if(bGuyY > height + 32):
        bGuyX = random.randrange(0, width)
 
-    if gGuyShoot == True:
-         gShotY = gShotDrawAndMove(gShot, gShotX,gShotY)
+    if (checkShot == True):
+        gShotMoveUp(imgy+16, pixMove)
        
     bGuyDraw(bguy, bGuyX, bGuyY) #Need to Allow random x positions
 
